@@ -19,3 +19,12 @@ const TABS_OPEN = 347;
 
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", String(TABS_OPEN), "utf8");
+
+// Self-check the gate before exiting: the entry must be UTF-8 text of
+// 1 to 5 characters, digits only, not only white space. Fail loudly
+// rather than ship an invalid entry.
+import { readFileSync } from "node:fs";
+const written = readFileSync("/output/entry.txt", "utf8");
+if (!/^\d{1,5}$/.test(written)) {
+  throw new Error(`entry failed the gate: ${JSON.stringify(written)}`);
+}
